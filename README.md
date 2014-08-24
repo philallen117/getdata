@@ -4,7 +4,7 @@ get-data: assignment for course in getting and cleaning data
 Background to the analysis
 --------------------------
 
-There is a substantial body of research on making computing functionality ready at hand in everyday life and work, labelled "pervasive computing" or "ubiquitous computing".
+There is a substantial body of research on making computing functionality ready at hand in everyday life and work, labelled variously as "pervasive computing" or [ubiquitous computing](http://www.ubiq.com/hypertext/weiser/UbiHome.html).
 One part of this movement is making software and devices that are "context aware", whether physically, emotionally or socially.
 One strand of that is to infer physical activity states from movement sensors. For example, is the user driving, or asleep? What is the best way to deal with incoming messages or calls in that case?
 
@@ -13,24 +13,38 @@ Focus of data preparation
 
 Prepare data to facilitate the recognition of phyiscal activity states from smartphone accelerometers and gyroscopes (which can be used to estimate angular acceleration). The recognition work could be attempted using machine learning techniques, for example.
 
-In machine learning, some practitioners offer the advice to start simple. Therefore, this data preparation includes just a few variables.
-
-The publishers of the data have already processed the raw sensor output, and I have chosen to exoloit that. I have decided to extract the "Body" components (with estimated gravity constributions subtracted out).
-
-Additionally, I have chosen to focus on the simple metrics in the time domain. Without a direct request from somebody who understands the frequency domain measures and knows what they plan to do with the frequency domain data, I have chosen to extract only data whose derivation I understand. Boring, but morally defensible.
-
-That is, I have concentrated on
 
 Source data
 -----------
 
-The source data is a given by the terms of the assignment.
+The source data is given by the assignment.
 
-The unpacked source data contains test and training data. I have processed only the training data.
+The structure of the source data is not completely explicit. By comparing contents and data sizes I have inferred:
 
-mean and standard deviation.
+- *activity_labels.txt* contains an encoding of activities (walking, etc.) into integer IDs, that is used in the observation files. One row per participant.
 
+- *features.txt* contains an ordered list of features, that is (derived) sensor measures. Sensor values are listed in the same order, in the data files. One feature per row.
 
+- *test* and *train* directories containing respectively test and training data. These folders have the same structure. For train:
+
+	- *subject_train.txt* gives the participant numeric ID (1-30) for each observation, one row per observation.
+	
+	- *y_train.txt* gives the activity numeric ID (see above) for each observation, one row per observation.
+	
+	- *X_train.txt* gives the values of features, for each observation. One row per observation, features space-separated and in the order listed in features.txt (see above).
+
+Output
+------
+
+The publishers of the data have already processed the raw sensor output, and I have chosen to tidy the rocessed data, only. 
+
+We are instructed to focus on the sensor measures for means and standard deviations. I have chosen to focus on the "first order" means and standard deviations, and to leave out the angle measures that are based on them.
+
+The script outputs:
+
+- *tidy.txt* - the subsetted measures for merged training and testing data. 
+
+- *meltedmeans.txt* - mean values of the subsetted measures, by participant, activity and variable name. (See code book.) This is the file delivered as part of the assignment.
 
 Deliverables
 ------------
@@ -42,8 +56,6 @@ Deliverables
 * [Data preparation script](./runanalysis.R) 
 
 
-
-
 Use of tools
 ------------
 
@@ -51,7 +63,7 @@ Use of tools
 
 * The [code table document](./code_table.html) was prepared using R Markdown, which is supported by RStudio.
 
-* Packages used in the [data preparation script](./runanalysis.R) can be seen from library calls.
+* [plyr](http://www.jstatsoft.org/v40/i01/paper) and [reshape2](http://www.jstatsoft.org/v21/i12/paper) were used to tidy the data.
 
 
 
