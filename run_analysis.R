@@ -4,7 +4,7 @@
 raw.file.name <- "getdata-projectfiles-UCI HAR Dataset.zip"
 raw.file <- paste("./data", raw.file.name, sep = "/")
 if(!file.exists("./data")) dir.create("data")
-if(!file.exists(raw.file) {
+if(!file.exists(raw.file)) {
 	fileUrl <- paste("https://d396qusza40orc.cloudfront.net", raw.file.name, sep = "/")
 	download.file(fileUrl, destfile = rawfile)
 	date.downloaded <- date()
@@ -19,13 +19,18 @@ test.dir <- "./data/UCI HAR Dataset/test" # location of test data
 act.labels <- read.table(paste(top.dir, "activity_labels.txt", sep = "/"))
 names(act.labels) <- c("actid", "activity")
 ## Remove non-alpha chars
-act.labels$code <- gsub("_", "", act.labels$code)
+act.labels$code <- gsub("_", "", act.labels$activity)
 
 ## Names of derived sensor measures ("features")
 sensor.varnames <- read.table(paste(top.dir, "features.txt", sep = "/"))
-sensor.varnames <- tolower(gsub("()", "", sensor.varnames[,2], fixed = TRUE))
-mean.std.names <- sensor.varnames[grepl("mean", sensor.varnames) | grepl("std", sensor.varnames)]
+sensor.varnames <- tolower(sensor.varnames$V2)
+sensor.varnames <- gsub("-", "", (gsub("()", "", sensor.varnames, fixed = TRUE)))
 
+## Find names of measures that are simple means or standard deviation
+is.mean.std <- (grepl("mean", sensor.varnames) |
+	grepl("std", sensor.varnames) ) &
+	!grepl("angle", sensor.varnames)
+mean.std.names <- sensor.varnames[is.mean.std]
 
 library(plyr)
 
@@ -71,9 +76,15 @@ test.data <- cbind(test.activities, test.parts, test.sensors)
 
 all.data <- rbind(test.data, train.data)
 
-simple <- all.data[c("")]
+## Get means grouping by activity and participant.
+library(reshape2)
+melted <- melt(all.data, id.vars = c("activity", "participant"))
+means <- ddply(melted, .(activity, participant, variable), summarise, value=mean(value))
+# Leave means in melted form.
 
-means <- 5
+## Write data and means as CSVs, with header rows and no quotes
+write.table(all.data, file = "./data/tidy.txt",
+			sep = ",", col.names = TRUE, row.names = FALSE, quote = FALSE)
 
-write.table(all.data, file = "./data/out.txt", sep = ",", col.names = TRUE)
-
+write.table(means, file = "./data/meltedmeans.txt",
+			sep = ",", col.names = TRUE, row.names = FALSE, quote = FALSE)
