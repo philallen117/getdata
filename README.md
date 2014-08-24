@@ -44,22 +44,15 @@ The script outputs:
 
 - *tidy.txt* - the subsetted measures for merged training and testing data. 
 
-- *meltedmeans.txt* - mean values of the subsetted measures, by participant, activity and variable name. (See code book.) This is the file delivered as part of the assignment.
+- *meltedmeans.txt* - mean values of the subsetted measures, by participant, activity and variable name. This is the file delivered as part of the assignment.
 
-Deliverables
-------------
-
-* [Code table](./code_table.md) 
-
-* [Data preparation script](./run_analysis.R) 
+Here is the [code book](./code_table.md) for meltedmeans.txt.
 
 
 Use of tools
 ------------
 
 * R v3.1.1 and RStudio v0.98 were used.
-
-* The [code table document](./code_table.html) was prepared using R Markdown, which is supported by RStudio.
 
 * [plyr](http://www.jstatsoft.org/v40/i01/paper) and [reshape2](http://www.jstatsoft.org/v21/i12/paper) were used to tidy the data.
 
