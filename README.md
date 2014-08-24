@@ -49,11 +49,9 @@ The script outputs:
 Deliverables
 ------------
 
-* [Code table](./code_table.html) 
+* [Code table](./code_table.md) 
 
-* [Source for code table](./code_table.Rmd)
-
-* [Data preparation script](./runanalysis.R) 
+* [Data preparation script](./run_analysis.R) 
 
 
 Use of tools
